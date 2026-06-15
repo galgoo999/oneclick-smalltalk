@@ -108,7 +108,7 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-seri
 <div class="container">
 <div class="header">
   <h1>&#128138; 원클릭 스몰톡 &#8212; 거래처 한눈에 보기</h1>
-  <p>GJ약국영업팀 김경주 &#183; 광주&#183;전남 담당 40곳 &#183; 2026-06-15 22:41 기준</p>
+  <p>GJ약국영업팀 김경주 &#183; 광주&#183;전남 담당 40곳 &#183; 2026-06-15 22:55 기준</p>
 </div>
 <div class="search">
   <input type="text" id="Q" placeholder="거래처명 입력 (예: 희망, 이기세, 종약국...)" autocomplete="off" />
@@ -287,6 +287,8 @@ document.getElementById("SearchBtn").addEventListener("click",function(){
 });
 document.addEventListener("click",function(e){
   if(!e.target.closest(".search"))document.getElementById("Dropdown").style.display="none";
+  var btn=e.target.closest("button[data-tab]");
+  if(btn&&curName)switchTab(btn.getAttribute("data-tab"));
 });
 
 function switchTab(tab){
@@ -382,10 +384,10 @@ function render(name){
 
   html+='<div class="card"><div class="section" style="margin-top:0">&#127942; 매출 상위 품목</div>'
     +'<div class="tabs">'
-    +'<button class="tab tab-pro active" id="tab-pro" onclick="switchTab('pro')">전문약</button>'
-    +'<button class="tab tab-gen" id="tab-gen" onclick="switchTab('gen')">일반약</button>'
-    +'<button class="tab tab-hs" id="tab-hs" onclick="switchTab('hs')">건기식</button>'
-    +'<button class="tab tab-pb" id="tab-pb" onclick="switchTab('pb')">PB (이달)</button>'
+    +'<button class="tab tab-pro active" id="tab-pro" data-tab="pro">전문약</button>'
+    +'<button class="tab tab-gen" id="tab-gen" data-tab="gen">일반약</button>'
+    +'<button class="tab tab-hs" id="tab-hs" data-tab="hs">건기식</button>'
+    +'<button class="tab tab-pb" id="tab-pb" data-tab="pb">PB (이달)</button>'
     +'</div><div id="tab-content">'+renderTab(name,"pro")+'</div></div>';
 
   html+='<div class="card"><div class="section" style="margin-top:0">&#128240; 오늘의 이슈</div>'
@@ -393,7 +395,7 @@ function render(name){
   NEWS.market.forEach(function(n){
     html+='<div class="news-item"><div style="font-weight:600;margin-bottom:4px;">'+n.title+'</div>'
       +'<div style="color:#6B6963;margin-bottom:6px;">'+n.desc+'</div>'
-      +'<a href="'+n.link+'" target="_blank" style="coalor:#1D9E75;font-size:12px;font-weight:500;">기사 보기 &#8594;</a>'
+      +'<a href="'+n.link+'" target="_blank" style="color:#1D9E75;font-size:12px;font-weight:500;">기사 보기 &#8594;</a>'
       +' <span style="color:#999;font-size:11px;">'+n.source+'</span></div>';
   });
   html+='<div style="font-size:12px;color:#3C3489;margin:14px 0 8px;font-weight:600;">&#128205; 광주&#183;전남 지역</div>';
