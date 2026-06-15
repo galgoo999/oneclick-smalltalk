@@ -108,7 +108,7 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-seri
 <div class="container">
 <div class="header">
   <h1>&#128138; 원클릭 스몰톡 &#8212; 거래처 한눈에 보기</h1>
-  <p>GJ약국영업팀 김경주 &#183; 광주&#183;전남 담당 40곳 &#183; 2026-06-15 23:35 기준</p>
+  <p>GJ약국영업팀 김경주 &#183; 광주&#183;전남 담당 40곳 &#183; 2026-06-15 23:38 기준</p>
 </div>
 <div class="search">
   <input type="text" id="Q" placeholder="거래처명 입력 (예: 희망, 이기세, 종약국...)" autocomplete="off" />
@@ -329,7 +329,7 @@ function render(name){
   var remaining=Math.max(0,d.monthGoal-d.monthCurrent);
   var remDays=d.monthDays-d.monthDay;
   var dailyNeed=remDays>0?Math.round(remaining/remDays):0;
-  var pbMonth=Math.round(d.sales*d.catRatio.pb/100);
+  var pbMonth=d.pbTop.length>0?d.pbTop.reduce(function(s,x){return s+x.sales;},0):Math.round(d.sales*d.catRatio.pb/100);
   var tUp=d.salesTrend.startsWith("+");
   var gCls=d.grade==="A"?"grade":d.grade==="B"?"grade grade-B":"grade grade-C";
   var barColor=pct>=100?"#1D9E75":pct>=80?"#639922":pct>=50?"#BA7517":"#E24B4A";
