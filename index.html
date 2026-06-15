@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; }
-body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif; background: #F5F4EE; color: #1F1E1D; margin: 0; padding: 20px; font-size: 14px; line-height: 1.5; }
+body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background: #F5F4EE; color: #1F1E1D; margin: 0; padding: 20px; font-size: 14px; line-height: 1.5; }
 .container { max-width: 1100px; margin: 0 auto; }
 .header { background: linear-gradient(135deg, #0a3d2e, #1D9E75); border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; }
 .header h1 { margin: 0 0 4px; font-size: 22px; color: #fff; font-weight: 800; }
@@ -16,10 +16,9 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD
 .search input { flex: 1; padding: 11px 14px; border: 1px solid #E8E6DC; border-radius: 8px; font-size: 14px; background: #fff; font-family: inherit; }
 .search input:focus { outline: none; border-color: #1D9E75; box-shadow: 0 0 0 3px rgba(29,158,117,0.1); }
 .search button { padding: 10px 18px; border: 1px solid #E8E6DC; background: #fff; border-radius: 8px; cursor: pointer; font-size: 14px; font-family: inherit; }
-.search button:hover { background: #F5F4EE; }
-.dd { position: absolute; top: 100%; left: 0; right: 80px; background: #fff; border: 1px solid #E8E6DC; border-radius: 10px; margin-top: 6px; max-height: 380px; overflow-y: auto; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.dd { position: absolute; top: 100%; left: 0; right: 80px; background: #fff; border: 1px solid #E8E6DC; border-radius: 10px; margin-top: 6px; max-height: 380px; overflow-y: auto; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.1); display: none; }
 .dd-count { padding: 8px 14px; font-size: 12px; color: #6B6963; border-bottom: 1px solid #F0EEE5; background: #FAFAF6; }
-.dd-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #F0EEE5; transition: background 0.1s; }
+.dd-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #F0EEE5; }
 .dd-item:last-child { border-bottom: none; }
 .dd-item:hover { background: #F5F4EE; }
 .dd-name { font-size: 15px; font-weight: 600; }
@@ -27,7 +26,6 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD
 .dd-grade-B { background: #FAEEDA; color: #633806; }
 .dd-grade-C { background: #FBE5E5; color: #7C0C0C; }
 .dd-sub { font-size: 12px; color: #6B6963; margin-top: 3px; }
-.dd-empty { padding: 18px; text-align: center; color: #6B6963; font-size: 14px; }
 .hint { padding: 10px 14px; background: #FAFAF6; border-radius: 8px; font-size: 12px; color: #6B6963; margin-bottom: 14px; border: 1px dashed #E8E6DC; }
 .card { background: #fff; border: 1px solid #E8E6DC; border-radius: 12px; padding: 16px 20px; margin-bottom: 14px; }
 .card-pb { border: 2px solid #7F77DD; }
@@ -38,7 +36,7 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD
 .grade-B { background: #FAEEDA; color: #633806; }
 .grade-C { background: #FBE5E5; color: #7C0C0C; }
 .section { font-size: 15px; font-weight: 600; margin: 14px 0 8px; }
-.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 8px; }
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
 .metric { background: #F5F4EE; border-radius: 8px; padding: 12px 14px; }
 .metric-label { font-size: 12px; color: #6B6963; margin-bottom: 4px; }
 .metric-value { font-size: 20px; font-weight: 600; }
@@ -49,7 +47,6 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD
 .pb-hero { background: #EEEDFE; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
 .pb-hero-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
 .pb-pct { font-size: 30px; font-weight: 600; color: #3C3489; }
-.pb-label { font-size: 13px; color: #534AB7; margin-left: 8px; }
 .pb-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 8px; }
 .pb-stat { background: #fff; border-radius: 8px; padding: 10px 12px; border: 1px solid #CECBF6; }
 .pb-stat-label { font-size: 12px; color: #534AB7; }
@@ -70,7 +67,7 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD
 .goal-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
 .goal-pct { font-size: 30px; font-weight: 600; color: #1D9E75; }
 .bar-track { height: 14px; background: #fff; border-radius: 7px; overflow: hidden; border: 1px solid #E8E6DC; }
-.bar-fill { height: 100%; background: #1D9E75; transition: width 0.5s ease; }
+.bar-fill { height: 100%; transition: width 0.5s ease; }
 .goal-meta { display: flex; justify-content: space-between; font-size: 12px; color: #6B6963; margin-top: 8px; }
 .chart-wrap { height: 140px; margin: 8px 0; }
 .chart-square { height: 220px; position: relative; }
@@ -88,20 +85,18 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD
 .cat-grid { display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: center; }
 .cat-item { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px dashed #E8E6DC; }
 .cat-dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 8px; vertical-align: -1px; }
-.news { padding: 12px 14px; background: #F5F4EE; border-radius: 8px; margin-bottom: 8px; font-size: 13px; }
-.kv4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.news-item { padding: 12px 14px; background: #F5F4EE; border-radius: 8px; margin-bottom: 8px; font-size: 13px; }
+.kv4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
 .kv { background: #F5F4EE; border-radius: 8px; padding: 10px 12px; }
 .kv.r { background: #FBE5E5; }
 .kv.g { background: #EAF3DE; }
 .kvl { font-size: 11px; color: #6B6963; }
 .kva { font-size: 16px; font-weight: 600; margin-top: 4px; }
-.memo-input { width: 100%; min-height: 80px; resize: vertical; font-size: 14px; padding: 10px 12px; border: 1px solid #E8E6DC; border-radius: 8px; font-family: inherit; }
-.memo-actions { display: flex; gap: 8px; margin-top: 8px; }
-.memo-actions button { padding: 8px 14px; border: 1px solid #E8E6DC; background: #fff; border-radius: 8px; cursor: pointer; font-size: 13px; font-family: inherit; }
-.memo-actions button:hover { background: #F5F4EE; }
+.memo-input { width: 100%; min-height: 80px; resize: vertical; font-size: 14px; padding: 10px 12px; border: 1px solid #E8E6DC; border-radius: 8px; font-family: inherit; margin-top: 8px; }
+.memo-btn { padding: 8px 14px; border: 1px solid #E8E6DC; background: #fff; border-radius: 8px; cursor: pointer; font-size: 13px; font-family: inherit; margin-top: 8px; margin-right: 6px; }
+.memo-btn:hover { background: #F5F4EE; }
 .memo-item { background: #F5F4EE; border-radius: 8px; padding: 12px 14px; margin: 8px 0; font-size: 13px; }
 .memo-time { font-size: 11px; color: #6B6963; margin-bottom: 4px; }
-.ai-box { background: #EAF3DE; border-left: 3px solid #639922; padding: 10px 12px; margin-top: 8px; font-size: 13px; color: #173404; border-radius: 0 6px 6px 0; }
 .insight { margin-top: 12px; padding: 12px 14px; background: #F5F4EE; border-radius: 8px; font-size: 13px; line-height: 1.6; }
 .empty { padding: 16px; text-align: center; color: #6B6963; font-size: 12px; background: #F5F4EE; border-radius: 8px; }
 .welcome { text-align: center; padding: 48px 24px; color: #6B6963; }
@@ -117,23 +112,18 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD
 </head>
 <body>
 <div class="container">
-
 <div class="header">
   <h1>원클릭 스몰톡 — 거래처 한눈에 보기</h1>
   <p>GJ약국영업팀 김경주 · 광주·전남 담당 40곳 · v2.0 (2026-06-15 기준)</p>
 </div>
-
 <div class="search">
-  <input type="text" id="Q" placeholder="거래처명 입력 (예: 희망, 종약국, 이기세...)" oninput="onQuery()" onfocus="onQuery()" onkeydown="if(event.key==='Enter')doSearch()" autocomplete="off" />
-  <button onclick="doSearch()">검색</button>
-  <div id="Dropdown" class="dd" style="display:none;"></div>
+  <input type="text" id="Q" placeholder="거래처명 입력 (예: 희망, 이기세, 종약국...)" autocomplete="off" />
+  <button id="SearchBtn">검색</button>
+  <div id="Dropdown" class="dd"></div>
 </div>
-<div class="hint">💡 검색창을 클릭하면 담당 거래처 40곳이 표시됩니다. 글자를 입력하면 자동완성됩니다.</div>
-
-<div id="Result"></div>
-
+<div class="hint">&#128161; 검색창을 클릭하면 담당 거래처 40곳이 표시됩니다. 글자를 입력하면 자동완성됩니다.</div>
+<div id="Result"><div class="welcome card"><h3>&#128269; 거래처를 검색해주세요</h3><p>위 검색창을 클릭하면 담당 거래처 40곳이 표시됩니다.<br>글자 입력 시 자동완성으로 거래처를 찾을 수 있습니다.<br><br><span style="font-size:12px;color:#1D9E75;">&#10003; v2.0: 자동완성 검색 · 차트 · 카테고리 탭 · 메모 저장</span></p></div></div>
 </div>
-
 <script>
 const LIST = [
   ["희망약국","화순","약사","A",170000000,"-29%",30,420000000,240000000,0,240000000,0,89,11,0,["맥세렌디(한국맥널티)", "라미실크림1%(신)(일반)"]],
@@ -180,371 +170,361 @@ const LIST = [
 
 const NEWS = {
   market: [
-    { title: '의약품 유통업계 대형화… 1조클럽 속출', desc: '지오영, 지오영네트웍스는 병원과 약국 시장을 각각 담당하며 그룹 차원의 시장 지배력을 강화', source: 'fnnews.com', link: 'http://www.fnnews.com/news/202606141821131016' },
-    { title: '외국인 약국 매출 급증 (433.9%↑)', desc: '외국인 관광객 증가로 약국 매출이 크게 상승. 세부 업종별 매출 증가율 1위', source: 'busan.com', link: 'https://www.busan.com/view/busan/view.php?code=2026061418262529150' },
+    { title: "의약품 유통업계 대형화… 1조클럽 속출", desc: "지오영, 지오영네트웍스는 병원과 약국 시장을 각각 담당하며 그룹 차원의 시장 지배력을 강화", source: "fnnews.com", link: "http://www.fnnews.com/news/202606141821131016" },
+    { title: "외국인 약국 매출 급증 (433.9%↑)", desc: "외국인 관광객 증가로 약국 매출이 크게 상승, 세부 업종별 매출 증가율 1위 기록", source: "busan.com", link: "https://www.busan.com" }
   ],
   local: [
-    { title: '"100평 이상 창고형 약국, 지역화폐 가맹 제한"…익산시 첫 사례', desc: '대한약사회·전북약사회·익산시약사회가 창고형 약국 지역화폐 가맹 제한 조치에 협력', source: 'kpanews.co.kr', link: 'https://www.kpanews.co.kr/news/articleView.html?idxno=536662' },
-    { title: '대한약사회, 약사 표준업무절차서 개정 추진', desc: '약국 현장에서 활용 가능한 표준업무절차서 전면 개정으로 약사 직능 강화 방향', source: 'dailypharm.com', link: 'https://www.dailypharm.com' },
+    { title: "창고형 약국, 지역화폐 가맹점 제한…첫 사례", desc: "대한약사회를 비롯해 전국 약사회가 창고형 약국의 지역화폐 가맹 제한 조치에 협력", source: "kpanews.co.kr", link: "https://www.kpanews.co.kr" },
+    { title: "대한약사회, 약사 표준업무절차서 개정 추진", desc: "약국 현장에서 활용 가능한 표준업무절차서 전면 개정으로 약사 직능 강화 방향", source: "dailypharm.com", link: "https://www.dailypharm.com" }
   ]
 };
 
+// 이름 배열 (onclick에서 인덱스로 참조)
+const NAMES = [];
+const DATA = {};
+
 function makeData(arr) {
-  const [name, region, pharmacist, grade, sales, salesTrend, returnRate, debt, monthGoal, pbPct, maySales, aprSales, catPro, catGen, catHs, genProds] = arr;
+  const name = arr[0], region = arr[1], pharmacist = arr[2], grade = arr[3];
+  const sales = arr[4], salesTrend = arr[5], returnRate = arr[6], debt = arr[7];
+  const monthGoal = arr[8], pbPct = arr[9], maySales = arr[10], aprSales = arr[11];
+  const catPro = arr[12], catGen = arr[13], catHs = arr[14], genProds = arr[15];
 
   const monthCurrent = sales;
-  const monthDay = 15;
-  const monthDays = 30;
+  const monthDay = 15, monthDays = 30;
 
-  // Daily accumulation curve
   const daily = [0];
-  for (let i = 1; i <= monthDays; i++) {
-    if (i >= monthDay) daily.push(monthCurrent);
-    else daily.push(Math.round(monthCurrent * i / monthDay));
+  for (var i = 1; i <= monthDays; i++) {
+    daily.push(i >= monthDay ? monthCurrent : Math.round(monthCurrent * i / monthDay));
   }
 
-  // Category ratios
+  const base = sales > 0 ? sales * 2 : (maySales || 1000000);
   const catRatio = { pro: catPro, gen: catGen, hs: catHs, pb: pbPct };
-  const annualize = sales > 0 ? sales * 2 : (maySales || 1000000);
   const catSales = {
-    pro: Math.round(annualize * catPro / 100),
-    gen: Math.round(annualize * catGen / 100),
-    hs: Math.round(annualize * catHs / 100),
-    pb: Math.round(annualize * pbPct / 100)
+    pro: Math.round(base * catPro / 100),
+    gen: Math.round(base * catGen / 100),
+    hs: Math.round(base * catHs / 100),
+    pb: Math.round(base * pbPct / 100)
   };
-
-  const trendUp = salesTrend.startsWith('+');
+  const tUp = salesTrend.startsWith("+");
+  const rnd = function(a,b){ return Math.floor(Math.random()*b)+a; };
   const catTrend = {
-    pro: trendUp ? '+' + (Math.floor(Math.random()*8)+2) + '%' : '-' + (Math.floor(Math.random()*8)+2) + '%',
-    gen: trendUp ? '+' + (Math.floor(Math.random()*5)+1) + '%' : '-' + (Math.floor(Math.random()*5)+1) + '%',
-    hs: '+' + (Math.floor(Math.random()*12)+3) + '%',
+    pro: (tUp ? "+" : "-") + rnd(2,8) + "%",
+    gen: (tUp ? "+" : "-") + rnd(1,6) + "%",
+    hs: "+" + rnd(3,12) + "%",
     pb: salesTrend
   };
 
-  // Product lists — use real gen products where available, fill with generics
-  const defaultProItems = ['아모디핀5mg','리피토10mg','메트포르민500mg','오메프라졸20mg','엘트로신','암로디핀','디아미크롱','바이엘아스피린'];
-  const defaultHsItems = ['센트룸종합비타민','오메가31000mg','프로바이오틱스60포','루테인','밀크씨슬','콜라겐'];
-  const pbItemPool = ['태전 종합비타민','태전 프로바이오 30포','태전 칼슘마그네슘','태전 오메가3','태전 위장약','TJ팜 루테인','TJ팜 밀크씨슬','서울태전 비타민C'];
+  const proPool = ["아모디핀5mg","리피토10mg","메트포르민500mg","오메프라졸20mg","엘트로신","암로디핀","디아미크롱","바이엘아스피린"];
+  const hsPool = ["센트룸종합비타민","오메가31000mg","프로바이오틱스60포","루테인","밀크씨슬","콜라겐"];
+  const pbPool = ["태전 종합비타민","태전 프로바이오 30포","태전 칼슘마그네슘","태전 오메가3","TJ팜 루테인","TJ팜 밀크씨슬"];
 
-  function gT(items, total, maxC) {
-    const c = Math.min(items.length, Math.max(1, maxC));
-    return items.slice(0, c).map((n, i) => ({ name: n, sales: Math.max(10000, Math.round(total / c * (1.5 - i * 0.15))) }));
+  function makeList(items, total, cnt) {
+    cnt = Math.min(items.length, Math.max(1, cnt));
+    return items.slice(0, cnt).map(function(n, i) {
+      return { name: n, sales: Math.max(10000, Math.round(total / cnt * (1.5 - i * 0.15))) };
+    });
   }
-
-  const salesCount = Math.max(1, Math.floor(sales / 500000));
-  const proTop = gT(defaultProItems, catSales.pro, Math.min(8, salesCount + 2));
-  const genTop = genProds.length > 0
-    ? genProds.map((n, i) => ({ name: n, sales: Math.max(10000, Math.round(catSales.gen / genProds.length * (1.4 - i * 0.15))) }))
-    : gT(['타이레놀500mg','판콜에이','훼스탈골드','게보린','활명수'], catSales.gen, Math.min(5, salesCount));
-  const hsTop = gT(defaultHsItems, catSales.hs, Math.min(5, salesCount));
-  const pbTop = pbPct > 0
-    ? pbItemPool.slice(0, Math.min(5, Math.max(1, Math.floor(pbPct / 3)))).map((n, i) => ({
-        name: n,
-        qty: Math.max(1, Math.round((annualize * pbPct / 100) / pbItemPool.length / 80000)),
-        sales: Math.round((annualize * pbPct / 100) / Math.max(1, Math.floor(pbPct / 3)) * (1.3 - i * 0.15))
-      }))
+  var sc = Math.max(1, Math.floor(sales / 500000));
+  var proTop = makeList(proPool, catSales.pro, sc + 2);
+  var genTop = genProds.length > 0
+    ? genProds.map(function(n, i) { return { name: n, sales: Math.max(10000, Math.round(catSales.gen / genProds.length * (1.4 - i * 0.15))) }; })
+    : makeList(["타이레놀500mg","판콜에이","훼스탈골드","게보린","활명수"], catSales.gen, sc);
+  var hsTop = makeList(hsPool, catSales.hs, sc);
+  var pbTop = pbPct > 0
+    ? pbPool.slice(0, Math.min(4, Math.max(1, Math.floor(pbPct/3)))).map(function(n, i) {
+        return { name: n, qty: Math.max(1, Math.round(catSales.pb / 4 / 80000)), sales: Math.round(catSales.pb / Math.max(1,Math.floor(pbPct/3)) * (1.3-i*0.15)) };
+      })
     : [];
 
-  return {
-    name, region, pharmacist, grade, sales, salesTrend, returnRate, debt,
-    monthGoal, monthCurrent, monthDay, monthDays, maySales, aprSales,
-    daily, proTop, genTop, hsTop, pbTop,
-    catRatio, catSales, catTrend,
-    pb3mAvg: Math.round((annualize * pbPct / 100) * 0.9),
-    news: NEWS,
-    memo: []
-  };
+  return { name:name, region:region, pharmacist:pharmacist, grade:grade, sales:sales, salesTrend:salesTrend,
+    returnRate:returnRate, debt:debt, monthGoal:monthGoal, monthCurrent:monthCurrent,
+    monthDay:monthDay, monthDays:monthDays, maySales:maySales, aprSales:aprSales,
+    daily:daily, proTop:proTop, genTop:genTop, hsTop:hsTop, pbTop:pbTop,
+    catRatio:catRatio, catSales:catSales, catTrend:catTrend,
+    pb3mAvg: Math.round(catSales.pb * 0.9), news:NEWS, memo:[] };
 }
 
-const DATA = {};
-LIST.forEach(arr => { DATA[arr[0]] = makeData(arr); });
+LIST.forEach(function(arr) {
+  var d = makeData(arr);
+  NAMES.push(d.name);
+  DATA[d.name] = d;
+});
 
-let curName = null;
-let curTab = 'pro';
+var curName = null, curTab = "pro";
 
 function fmt(n) {
-  if (n === 0) return '없음';
-  if (n >= 100000000) return (n/100000000).toFixed(1) + '억';
-  if (n >= 10000000) return (n/10000000).toFixed(1) + '천만';
-  if (n >= 10000) return Math.round(n/10000) + '만원';
-  return n.toLocaleString() + '원';
+  if (!n || n === 0) return "없음";
+  if (n >= 100000000) return (n/100000000).toFixed(1) + "억";
+  if (n >= 10000000) return (n/10000000).toFixed(1) + "천만";
+  if (n >= 10000) return Math.round(n/10000) + "만원";
+  return n.toLocaleString() + "원";
 }
 
-function onQuery() {
-  const q = document.getElementById('Q').value.trim();
-  const dd = document.getElementById('Dropdown');
-  const all = Object.keys(DATA);
-  if (!q) {
-    dd.innerHTML = '<div class="dd-count">담당 거래처 (총 ' + all.length + '곳) — 글자 입력 시 검색됩니다</div>' +
-      all.slice(0, 8).map(ddRow).join('');
-    dd.style.display = 'block';
-    return;
-  }
-  const matches = all.filter(n => n.includes(q));
-  if (matches.length === 0) {
-    dd.innerHTML = '<div class="dd-empty">"' + q + '" 매칭 거래처 없음</div>';
+function showDD(items, title) {
+  var dd = document.getElementById("Dropdown");
+  if (items.length === 0) {
+    dd.innerHTML = '<div class="dd-count">매칭 거래처 없음</div>';
   } else {
-    dd.innerHTML = '<div class="dd-count">' + matches.length + '곳 매칭</div>' + matches.map(ddRow).join('');
+    var rows = '<div class="dd-count">' + title + '</div>';
+    items.forEach(function(name, i) {
+      var d = DATA[name];
+      var gCls = d.grade === "A" ? "dd-grade" : d.grade === "B" ? "dd-grade dd-grade-B" : "dd-grade dd-grade-C";
+      var tCls = d.salesTrend.startsWith("+") ? "up" : d.salesTrend === "0%" ? "neutral" : "down";
+      rows += '<div class="dd-item" data-idx="' + NAMES.indexOf(name) + '">'
+        + '<div><span class="dd-name">' + name + '</span><span class="' + gCls + '">' + d.grade + '</span></div>'
+        + '<div class="dd-sub">' + d.region + ' · ' + d.pharmacist + ' · 이번달 <span class="' + tCls + '">' + fmt(d.sales) + '</span></div>'
+        + '</div>';
+    });
+    dd.innerHTML = rows;
   }
-  dd.style.display = 'block';
+  dd.style.display = "block";
 }
 
-function ddRow(name) {
-  const d = DATA[name];
-  const gCls = d.grade === 'B' ? 'dd-grade dd-grade-B' : d.grade === 'C' ? 'dd-grade dd-grade-C' : 'dd-grade';
-  const tCls = d.salesTrend.startsWith('+') ? 'up' : d.salesTrend === '0%' ? 'neutral' : 'down';
-  return '<div class="dd-item" onclick="pick('' + name.replace(/'/g,"\'"+'') + '')"><div><span class="dd-name">' + name + '</span><span class="' + gCls + '">' + d.grade + '</span></div><div class="dd-sub">' + d.region + ' · ' + d.pharmacist + ' · 이번달 ' + fmt(d.sales) + ' (<span class="' + tCls + '">' + d.salesTrend + '</span>)</div></div>';
-}
+document.getElementById("Dropdown").addEventListener("click", function(e) {
+  var item = e.target.closest(".dd-item");
+  if (item) {
+    var idx = parseInt(item.getAttribute("data-idx"));
+    pickByIdx(idx);
+  }
+});
 
-function pick(name) {
-  document.getElementById('Q').value = name;
-  document.getElementById('Dropdown').style.display = 'none';
+function pickByIdx(idx) {
+  var name = NAMES[idx];
+  document.getElementById("Q").value = name;
+  document.getElementById("Dropdown").style.display = "none";
   render(name);
 }
 
-function doSearch() {
-  const q = document.getElementById('Q').value.trim();
-  if (!q) return;
-  const found = Object.keys(DATA).find(k => k.includes(q));
-  if (found) pick(found);
-}
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.search')) document.getElementById('Dropdown').style.display = 'none';
+var qEl = document.getElementById("Q");
+qEl.addEventListener("input", function() {
+  var q = this.value.trim();
+  if (!q) {
+    showDD(NAMES.slice(0, 8), "담당 거래처 40곳 — 클릭으로 선택");
+  } else {
+    var m = NAMES.filter(function(n) { return n.includes(q); });
+    showDD(m, m.length + "곳 매칭");
+  }
+});
+qEl.addEventListener("focus", function() {
+  var q = this.value.trim();
+  if (!q) showDD(NAMES.slice(0, 8), "담당 거래처 40곳 — 클릭으로 선택");
+});
+qEl.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    var q = this.value.trim();
+    var found = NAMES.find(function(n) { return n.includes(q); });
+    if (found) { this.value = found; document.getElementById("Dropdown").style.display = "none"; render(found); }
+  }
+});
+document.getElementById("SearchBtn").addEventListener("click", function() {
+  var q = document.getElementById("Q").value.trim();
+  var found = NAMES.find(function(n) { return n.includes(q); });
+  if (found) { document.getElementById("Q").value = found; document.getElementById("Dropdown").style.display = "none"; render(found); }
+});
+document.addEventListener("click", function(e) {
+  if (!e.target.closest(".search")) document.getElementById("Dropdown").style.display = "none";
 });
 
 function switchTab(tab) {
   curTab = tab;
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('tab-content').innerHTML = renderTab(curName, tab);
+  ["pro","gen","hs","pb"].forEach(function(t) {
+    document.getElementById("tab-"+t).classList.toggle("active", t === tab);
+  });
+  document.getElementById("tab-content").innerHTML = renderTab(curName, tab);
 }
 
 function renderTab(name, tab) {
-  const d = DATA[name];
-  let list, label, catClass;
-  if (tab === 'pro') { list = d.proTop; label = '전문약'; catClass = 'pro'; }
-  else if (tab === 'gen') { list = d.genTop; label = '일반약'; catClass = 'gen'; }
-  else if (tab === 'hs') { list = d.hsTop; label = '건기식'; catClass = 'hs'; }
-  else { list = d.pbTop; label = 'PB'; catClass = 'pb'; }
-  const total = list.reduce((s, x) => s + x.sales, 0);
-  let h = '<div class="tab-summary">';
-  h += '<div class="tab-sum-item"><span class="tab-sum-label">' + label + ' 품목</span><span class="tab-sum-val">' + list.length + '개</span></div>';
-  h += '<div class="tab-sum-item"><span class="tab-sum-label">매출 합계</span><span class="tab-sum-val">' + fmt(total) + '</span></div>';
-  h += '<div class="tab-sum-item"><span class="tab-sum-label">비중</span><span class="tab-sum-val">' + d.catRatio[tab] + '%</span></div>';
-  const tCls = d.catTrend[tab].startsWith('+') ? 'up' : 'down';
-  h += '<div class="tab-sum-item"><span class="tab-sum-label">전월 대비</span><span class="tab-sum-val ' + tCls + '">' + d.catTrend[tab] + '</span></div>';
-  h += '</div>';
-  if (list.length === 0) { h += '<div class="empty">해당 카테고리 매출 내역 없음 — 영업 기회!</div>'; return h; }
-  list.forEach((item, i) => {
-    const rc = tab === 'pb' ? 'top-row top-row-pb' : 'top-row';
-    h += '<div class="' + rc + '"><div class="top-rank"' + (tab==='pb' ? ' style="color:#3C3489;"' : '') + '>' + (i+1) + '</div>';
-    h += '<div class="top-name"' + (tab==='pb' ? ' style="color:#3C3489;font-weight:600;"' : '') + '>' + item.name + (item.qty ? ' <span style="font-size:11px;color:#7F77DD;">' + item.qty + '개</span>' : '') + '</div>';
-    h += '<span class="top-cat cat-' + catClass + '">' + label + '</span>';
-    h += '<div class="top-amount"' + (tab==='pb' ? ' style="color:#3C3489;"' : '') + '>' + fmt(item.sales) + '</div></div>';
+  var d = DATA[name];
+  var list = tab === "pro" ? d.proTop : tab === "gen" ? d.genTop : tab === "hs" ? d.hsTop : d.pbTop;
+  var label = tab === "pro" ? "전문약" : tab === "gen" ? "일반약" : tab === "hs" ? "건기식" : "PB";
+  var total = list.reduce(function(s,x){ return s + x.sales; }, 0);
+  var tCls = d.catTrend[tab].startsWith("+") ? "up" : "down";
+  var h = '<div class="tab-summary">'
+    + '<div class="tab-sum-item"><span class="tab-sum-label">' + label + ' 품목</span><span class="tab-sum-val">' + list.length + '개</span></div>'
+    + '<div class="tab-sum-item"><span class="tab-sum-label">매출 합계</span><span class="tab-sum-val">' + fmt(total) + '</span></div>'
+    + '<div class="tab-sum-item"><span class="tab-sum-label">비중</span><span class="tab-sum-val">' + d.catRatio[tab] + '%</span></div>'
+    + '<div class="tab-sum-item"><span class="tab-sum-label">전월 대비</span><span class="tab-sum-val ' + tCls + '">' + d.catTrend[tab] + '</span></div>'
+    + '</div>';
+  if (!list.length) return h + '<div class="empty">해당 카테고리 매출 없음 — 영업 기회!</div>';
+  list.forEach(function(item, i) {
+    var rc = tab === "pb" ? "top-row top-row-pb" : "top-row";
+    var pbStyle = tab === "pb" ? ' style="color:#3C3489;"' : '';
+    var pbStyle2 = tab === "pb" ? ' style="color:#3C3489;font-weight:600;"' : '';
+    h += '<div class="' + rc + '"><div class="top-rank"' + pbStyle + '>' + (i+1) + '</div>'
+      + '<div class="top-name"' + pbStyle2 + '>' + item.name + (item.qty ? ' <span style="font-size:11px;color:#7F77DD;">' + item.qty + '개</span>' : '') + '</div>'
+      + '<span class="top-cat cat-' + tab + '">' + label + '</span>'
+      + '<div class="top-amount"' + pbStyle + '>' + fmt(item.sales) + '</div></div>';
   });
   return h;
 }
 
 function render(name) {
-  curName = name; curTab = 'pro';
-  const d = DATA[name];
-  const pct = d.monthGoal > 0 ? Math.round(d.monthCurrent / d.monthGoal * 100) : 0;
-  const remaining = Math.max(0, d.monthGoal - d.monthCurrent);
-  const remainingDays = d.monthDays - d.monthDay;
-  const dailyNeed = remainingDays > 0 ? Math.round(remaining / remainingDays) : 0;
-  const pbThisMonth = Math.round(d.sales * d.catRatio.pb / 100);
-  const trendUp = d.salesTrend.startsWith('+');
-  const gradeCls = d.grade === 'B' ? 'grade grade-B' : d.grade === 'C' ? 'grade grade-C' : 'grade';
+  curName = name; curTab = "pro";
+  var d = DATA[name];
+  var pct = d.monthGoal > 0 ? Math.round(d.monthCurrent / d.monthGoal * 100) : 0;
+  var remaining = Math.max(0, d.monthGoal - d.monthCurrent);
+  var remDays = d.monthDays - d.monthDay;
+  var dailyNeed = remDays > 0 ? Math.round(remaining / remDays) : 0;
+  var pbMonth = Math.round(d.sales * d.catRatio.pb / 100);
+  var tUp = d.salesTrend.startsWith("+");
+  var gCls = d.grade === "A" ? "grade" : d.grade === "B" ? "grade grade-B" : "grade grade-C";
+  var barColor = pct >= 100 ? "#1D9E75" : pct >= 80 ? "#639922" : pct >= 50 ? "#BA7517" : "#E24B4A";
 
-  let html = '<div class="card"><div class="head">';
-  html += '<div><h3 class="title">🏪 ' + d.name + '</h3>';
-  html += '<p class="sub">' + d.region + ' · ' + d.pharmacist + '</p></div>';
-  html += '<span class="' + gradeCls + '">등급 ' + d.grade + '</span></div>';
-  html += '<div class="metrics">';
-  html += '<div class="metric"><div class="metric-label">이번달 매출</div><div class="metric-value">' + fmt(d.sales) + '</div><div class="metric-trend ' + (trendUp ? 'up' : d.salesTrend === '0%' ? 'neutral' : 'down') + '">' + d.salesTrend + '</div></div>';
-  html += '<div class="metric"><div class="metric-label">반품률</div><div class="metric-value">' + d.returnRate + '%</div><div class="metric-trend ' + (d.returnRate < 5 ? 'up' : d.returnRate < 15 ? 'neutral' : 'down') + '">' + (d.returnRate < 5 ? '양호' : d.returnRate < 15 ? '보통' : '주의') + '</div></div>';
-  html += '<div class="metric"><div class="metric-label">미수금</div><div class="metric-value">' + fmt(d.debt) + '</div><div class="metric-trend ' + (d.debt < 5000000 ? 'up' : d.debt < 20000000 ? 'neutral' : 'down') + '">' + (d.debt < 5000000 ? '양호' : d.debt < 20000000 ? '관리' : '주의') + '</div></div>';
-  html += '</div>';
-  html += '<div class="kv4">';
-  html += '<div class="kv"><div class="kvl">5월 매출</div><div class="kva">' + fmt(d.maySales) + '</div></div>';
-  html += '<div class="kv"><div class="kvl">4월 매출</div><div class="kva">' + fmt(d.aprSales) + '</div></div>';
-  html += '<div class="kv"><div class="kvl">월 목표</div><div class="kva">' + fmt(d.monthGoal) + '</div></div>';
-  html += '<div class="kv' + (pct >= 80 ? ' g' : pct < 40 ? ' r' : '') + '"><div class="kvl">목표 달성률</div><div class="kva">' + pct + '%</div></div>';
-  html += '</div></div>';
+  var html = '<div class="card"><div class="head">'
+    + '<div><h3 class="title">&#127978; ' + d.name + '</h3><p class="sub">' + d.region + ' · ' + d.pharmacist + '</p></div>'
+    + '<span class="' + gCls + '">등급 ' + d.grade + '</span></div>'
+    + '<div class="metrics">'
+    + '<div class="metric"><div class="metric-label">이번달 매출</div><div class="metric-value">' + fmt(d.sales) + '</div><div class="metric-trend ' + (tUp ? "up" : d.salesTrend === "0%" ? "neutral" : "down") + '">' + d.salesTrend + '</div></div>'
+    + '<div class="metric"><div class="metric-label">반품률</div><div class="metric-value">' + d.returnRate + '%</div><div class="metric-trend ' + (d.returnRate < 5 ? "up" : d.returnRate < 15 ? "neutral" : "down") + '">' + (d.returnRate < 5 ? "양호" : d.returnRate < 15 ? "보통" : "주의") + '</div></div>'
+    + '<div class="metric"><div class="metric-label">미수금</div><div class="metric-value">' + fmt(d.debt) + '</div><div class="metric-trend ' + (d.debt < 5000000 ? "up" : d.debt < 20000000 ? "neutral" : "down") + '">' + (d.debt < 5000000 ? "양호" : d.debt < 20000000 ? "관리" : "주의") + '</div></div>'
+    + '</div>'
+    + '<div class="kv4">'
+    + '<div class="kv"><div class="kvl">5월 매출</div><div class="kva">' + fmt(d.maySales) + '</div></div>'
+    + '<div class="kv"><div class="kvl">4월 매출</div><div class="kva">' + fmt(d.aprSales) + '</div></div>'
+    + '<div class="kv"><div class="kvl">월 목표</div><div class="kva">' + fmt(d.monthGoal) + '</div></div>'
+    + '<div class="kv' + (pct >= 80 ? " g" : pct < 40 ? " r" : "") + '"><div class="kvl">달성률</div><div class="kva">' + pct + '%</div></div>'
+    + '</div></div>';
 
-  html += '<div class="card"><div class="section" style="margin-top:0">🎯 월 거래 금액 목표 진행률 (6월)</div>';
-  html += '<div class="goal-box"><div class="goal-row">';
-  html += '<div><span class="goal-pct">' + pct + '%</span> <span style="font-size:13px;color:#6B6963;">달성 (' + d.monthDay + '일 차 / ' + d.monthDays + '일)</span></div>';
-  html += '<div style="text-align:right;font-size:13px;"><strong>' + fmt(d.monthCurrent) + '</strong> / ' + fmt(d.monthGoal) + '</div></div>';
-  const barColor = pct >= 100 ? '#1D9E75' : pct >= 80 ? '#639922' : pct >= 50 ? '#BA7517' : '#E24B4A';
-  html += '<div class="bar-track"><div class="bar-fill" style="width:' + Math.min(pct, 100) + '%;background:' + barColor + '"></div></div>';
-  html += '<div class="goal-meta"><span>남은 ' + remainingDays + '일</span><span>일평균 ' + fmt(dailyNeed) + ' 필요</span><span>' + (pct >= 100 ? '목표 달성! 🎉' : '목표까지 ' + fmt(remaining)) + '</span></div></div>';
-  html += '<div class="chart-wrap"><canvas id="DailyChart"></canvas></div></div>';
+  html += '<div class="card"><div class="section" style="margin-top:0">&#127919; 월 거래 금액 목표 진행률 (6월)</div>'
+    + '<div class="goal-box"><div class="goal-row">'
+    + '<div><span class="goal-pct">' + pct + '%</span> <span style="font-size:13px;color:#6B6963;">달성 (15일/30일)</span></div>'
+    + '<div style="text-align:right;font-size:13px;"><strong>' + fmt(d.monthCurrent) + '</strong> / ' + fmt(d.monthGoal) + '</div></div>'
+    + '<div class="bar-track"><div class="bar-fill" style="width:' + Math.min(pct,100) + '%;background:' + barColor + '"></div></div>'
+    + '<div class="goal-meta"><span>남은 ' + remDays + '일</span><span>일평균 ' + fmt(dailyNeed) + ' 필요</span><span>' + (pct >= 100 ? "목표 달성! 🎉" : "목표까지 " + fmt(remaining)) + '</span></div></div>'
+    + '<div class="chart-wrap"><canvas id="DailyChart"></canvas></div></div>';
 
-  html += '<div class="card"><div class="section" style="margin-top:0">📊 카테고리 분석</div>';
-  html += '<div class="cat-grid"><div class="chart-square"><canvas id="CatChart"></canvas></div><div>';
-  const catItems = [
-    ['전문약', 'pro', '#378ADD'],
-    ['일반약', 'gen', '#EF9F27'],
-    ['건기식', 'hs', '#97C459'],
-    ['PB (자체)', 'pb', '#7F77DD'],
-  ];
-  catItems.forEach(([label, key, color]) => {
-    const isPb = key === 'pb';
-    const tCls2 = d.catTrend[key].startsWith('+') ? 'up' : 'down';
-    const rowStyle = isPb ? 'background:#F5F4FE;padding:8px 10px;border-radius:6px;border-bottom:none;margin-top:6px;' : '';
-    html += '<div class="cat-item" style="' + rowStyle + '"><div><span class="cat-dot" style="background:' + color + '"></span>' + (isPb ? '<strong style="color:#3C3489;">' : '<strong>') + label + '</strong> (' + d.catRatio[key] + '%)</div><div' + (isPb ? ' style="color:#3C3489;font-weight:600;"' : '') + '>' + fmt(d.catSales[key]) + ' <span class="' + tCls2 + '" style="font-size:12px;">' + d.catTrend[key] + '</span></div></div>';
+  html += '<div class="card"><div class="section" style="margin-top:0">&#128202; 카테고리 분석</div>'
+    + '<div class="cat-grid"><div class="chart-square"><canvas id="CatChart"></canvas></div><div>';
+  [["전문약","pro","#378ADD"],["일반약","gen","#EF9F27"],["건기식","hs","#97C459"],["PB (자체)","pb","#7F77DD"]].forEach(function(c) {
+    var lbl=c[0], key=c[1], color=c[2], isPb=(key==="pb");
+    var tC2 = d.catTrend[key].startsWith("+") ? "up" : "down";
+    var style = isPb ? "background:#F5F4FE;padding:8px 10px;border-radius:6px;border-bottom:none;margin-top:6px;" : "";
+    var nameStyle = isPb ? " style=\"color:#3C3489;\"" : "";
+    html += '<div class="cat-item" style="' + style + '"><div><span class="cat-dot" style="background:' + color + '"></span><strong' + nameStyle + '>' + lbl + '</strong> (' + d.catRatio[key] + '%)</div>'
+      + '<div' + nameStyle + '>' + fmt(d.catSales[key]) + ' <span class="' + tC2 + '" style="font-size:12px;">' + d.catTrend[key] + '</span></div></div>';
   });
   html += '</div></div></div>';
 
-  html += '<div class="card card-pb"><div class="section" style="margin-top:0;color:#3C3489;">💎 PB 제품 (자체 브랜드) 분석</div>';
-  html += '<div class="pb-hero"><div class="pb-hero-row">';
-  html += '<div><span class="pb-pct">' + d.catRatio.pb + '%</span><span class="pb-label">전체 매출 중 PB 비중</span></div>';
-  const pbTrend = d.catTrend.pb;
-  html += '<div><span class="' + (pbTrend.startsWith('+') ? 'up' : 'down') + '" style="font-weight:600;font-size:14px;">전월 대비 ' + pbTrend + '</span></div></div>';
-  html += '<div class="pb-grid">';
-  html += '<div class="pb-stat"><div class="pb-stat-label">이번달 PB 매출</div><div class="pb-stat-value">' + fmt(pbThisMonth) + '</div><div class="pb-stat-sub">' + d.monthDay + '일 차 누적</div></div>';
-  html += '<div class="pb-stat"><div class="pb-stat-label">PB 3개월 평균</div><div class="pb-stat-value">' + fmt(d.pb3mAvg) + '</div><div class="pb-stat-sub">월평균 (최근 3개월)</div></div>';
-  html += '<div class="pb-stat"><div class="pb-stat-label">PB 상품 수</div><div class="pb-stat-value">' + (d.pbTop.length > 0 ? d.pbTop.length + '종' : '미발주') + '</div><div class="pb-stat-sub">이달 취급 PB</div></div>';
-  html += '</div></div>';
-  let pbInsight = '';
-  if (d.catRatio.pb >= 15) pbInsight = '✓ PB 비중 우수. 신제품 PB 카테고리 확장 권장.';
-  else if (d.catRatio.pb >= 5) pbInsight = '○ PB 평균 수준. PB 품목 추가 도입으로 마진 개선 가능.';
-  else pbInsight = '⚠ PB 비중 낮음. 마진 높은 PB 우선 영업 필요.';
-  html += '<div class="insight" style="background:#F5F4FE;color:#3C3489;"><strong>영업 인사이트:</strong> ' + pbInsight + '</div></div>';
+  html += '<div class="card card-pb"><div class="section" style="margin-top:0;color:#3C3489;">&#128142; PB 제품 (자체 브랜드) 분석</div>'
+    + '<div class="pb-hero"><div class="pb-hero-row">'
+    + '<div><span class="pb-pct">' + d.catRatio.pb + '%</span> <span style="font-size:13px;color:#534AB7;">전체 매출 중 PB 비중</span></div>'
+    + '<div><span class="' + (d.catTrend.pb.startsWith("+") ? "up" : "down") + '" style="font-weight:600;">전월 대비 ' + d.catTrend.pb + '</span></div></div>'
+    + '<div class="pb-grid">'
+    + '<div class="pb-stat"><div class="pb-stat-label">이번달 PB 매출</div><div class="pb-stat-value">' + fmt(pbMonth) + '</div><div class="pb-stat-sub">15일 차 누적</div></div>'
+    + '<div class="pb-stat"><div class="pb-stat-label">PB 3개월 평균</div><div class="pb-stat-value">' + fmt(d.pb3mAvg) + '</div><div class="pb-stat-sub">최근 3개월 월평균</div></div>'
+    + '<div class="pb-stat"><div class="pb-stat-label">PB 상품 수</div><div class="pb-stat-value">' + (d.pbTop.length > 0 ? d.pbTop.length + "종" : "미발주") + '</div><div class="pb-stat-sub">이달 취급 PB</div></div>'
+    + '</div></div>'
+    + '<div class="insight" style="background:#F5F4FE;color:#3C3489;"><strong>영업 인사이트:</strong> '
+    + (d.catRatio.pb >= 15 ? "✓ PB 비중 우수. 신제품 PB 카테고리 확장 권장." : d.catRatio.pb >= 5 ? "○ PB 평균 수준. PB 품목 추가 도입으로 마진 개선 가능." : "⚠ PB 비중 낮음. 마진 높은 PB 우선 영업 필요.")
+    + '</div></div>';
 
-  html += '<div class="card"><div class="section" style="margin-top:0">🏆 매출 상위 품목 <span style="font-size:12px;color:#6B6963;font-weight:normal;margin-left:6px;">(카테고리별 탭 전환)</span></div>';
-  html += '<div class="tabs">';
-  html += '<button class="tab tab-pro active" id="tab-pro" onclick="switchTab('pro')">전문약</button>';
-  html += '<button class="tab tab-gen" id="tab-gen" onclick="switchTab('gen')">일반약</button>';
-  html += '<button class="tab tab-hs" id="tab-hs" onclick="switchTab('hs')">건기식</button>';
-  html += '<button class="tab tab-pb" id="tab-pb" onclick="switchTab('pb')">PB (이달)</button>';
-  html += '</div><div id="tab-content">' + renderTab(name, 'pro') + '</div></div>';
+  html += '<div class="card"><div class="section" style="margin-top:0">&#127942; 매출 상위 품목</div>'
+    + '<div class="tabs">'
+    + '<button class="tab tab-pro active" id="tab-pro" onclick="switchTab(\'pro\')">전문약</button>'
+    + '<button class="tab tab-gen" id="tab-gen" onclick="switchTab(\'gen\')">일반약</button>'
+    + '<button class="tab tab-hs" id="tab-hs" onclick="switchTab(\'hs\')">건기식</button>'
+    + '<button class="tab tab-pb" id="tab-pb" onclick="switchTab(\'pb\')">PB (이달)</button>'
+    + '</div><div id="tab-content">' + renderTab(name, "pro") + '</div></div>';
 
-  html += '<div class="card"><div class="section" style="margin-top:0">📰 오늘의 이슈 (카톡 모닝브리핑)</div>';
-  html += '<div style="font-size:12px;color:#1D9E75;margin-bottom:8px;font-weight:600;">🌐 전국 약국 시장</div>';
-  d.news.market.forEach(n => {
-    html += '<div class="news"><div style="font-weight:600;margin-bottom:4px;">' + n.title + '</div><div style="color:#6B6963;margin-bottom:6px;">' + n.desc + '</div>';
-    if (n.link) html += '<a href="' + n.link + '" target="_blank" style="color:#1D9E75;font-size:12px;text-decoration:none;font-weight:500;">기사 보기 →</a> · ';
-    html += '<span style="color:#999;font-size:11px;">' + n.source + '</span></div>';
+  html += '<div class="card"><div class="section" style="margin-top:0">&#128240; 오늘의 이슈</div>'
+    + '<div style="font-size:12px;color:#1D9E75;margin-bottom:8px;font-weight:600;">&#127758; 전국 약국 시장</div>';
+  NEWS.market.forEach(function(n) {
+    html += '<div class="news-item"><div style="font-weight:600;margin-bottom:4px;">' + n.title + '</div>'
+      + '<div style="color:#6B6963;margin-bottom:6px;">' + n.desc + '</div>'
+      + '<a href="' + n.link + '" target="_blank" style="color:#1D9E75;font-size:12px;text-decoration:none;font-weight:500;">기사 보기 →</a>'
+      + ' <span style="color:#999;font-size:11px;">' + n.source + '</span></div>';
   });
-  html += '<div style="font-size:12px;color:#3C3489;margin:14px 0 8px;font-weight:600;">📍 광주·전남 지역</div>';
-  d.news.local.forEach(n => {
-    html += '<div class="news"><div style="font-weight:600;margin-bottom:4px;">' + n.title + '</div><div style="color:#6B6963;margin-bottom:6px;">' + n.desc + '</div>';
-    if (n.link) html += '<a href="' + n.link + '" target="_blank" style="color:#3C3489;font-size:12px;text-decoration:none;font-weight:500;">기사 보기 →</a> · ';
-    html += '<span style="color:#999;font-size:11px;">' + n.source + '</span></div>';
+  html += '<div style="font-size:12px;color:#3C3489;margin:14px 0 8px;font-weight:600;">&#128205; 광주·전남 지역</div>';
+  NEWS.local.forEach(function(n) {
+    html += '<div class="news-item"><div style="font-weight:600;margin-bottom:4px;">' + n.title + '</div>'
+      + '<div style="color:#6B6963;margin-bottom:6px;">' + n.desc + '</div>'
+      + '<a href="' + n.link + '" target="_blank" style="color:#3C3489;font-size:12px;text-decoration:none;font-weight:500;">기사 보기 →</a>'
+      + ' <span style="color:#999;font-size:11px;">' + n.source + '</span></div>';
   });
   html += '</div>';
 
-  html += '<div class="card"><div class="section" style="margin-top:0">📝 거래처 메모</div>';
-  html += '<textarea class="memo-input" id="Memo" placeholder="거래처 문의·미팅 대화를 적어보세요..."></textarea>';
-  html += '<div class="memo-actions"><button onclick="saveMemo('' + name.replace(/'/g, "\'") + '')">💾 저장</button><button onclick="clearAllMemos('' + name.replace(/'/g, "\'") + '')">🗑 전체삭제</button></div>';
-  if (d.memo.length === 0) {
-    html += '<div style="margin-top:12px;padding:14px;text-align:center;color:#6B6963;font-size:13px;background:#F5F4EE;border-radius:8px;">저장된 메모가 없습니다.</div>';
+  html += '<div class="card"><div class="section" style="margin-top:0">&#128221; 거래처 메모</div>'
+    + '<textarea class="memo-input" id="MemoTxt" placeholder="거래처 문의, 미팅 내용을 기록하세요..."></textarea>'
+    + '<div><button class="memo-btn" id="SaveMemoBtn">&#128190; 저장</button><button class="memo-btn" id="ClearMemoBtn">&#128465; 전체삭제</button></div>';
+  if (!d.memo.length) {
+    html += '<div style="margin-top:10px;padding:12px;text-align:center;color:#6B6963;font-size:13px;background:#F5F4EE;border-radius:8px;">저장된 메모가 없습니다.</div>';
   } else {
-    d.memo.forEach((m, idx) => {
-      html += '<div class="memo-item"><div class="memo-time">' + m.time + '</div><div>' + m.text + '</div>';
-      if (m.ai) html += '<div class="ai-box"><strong>🤖 메모:</strong> ' + m.ai + '</div>';
-      html += '</div>';
+    d.memo.forEach(function(m) {
+      html += '<div class="memo-item"><div class="memo-time">' + m.time + '</div>' + m.text + '</div>';
     });
   }
   html += '</div>';
 
-  document.getElementById('Result').innerHTML = html;
+  document.getElementById("Result").innerHTML = html;
 
-  // Destroy existing charts
-  const dc = Chart.getChart('DailyChart');
-  const cc = Chart.getChart('CatChart');
-  if (dc) dc.destroy();
-  if (cc) cc.destroy();
+  document.getElementById("SaveMemoBtn").addEventListener("click", function() {
+    var txt = document.getElementById("MemoTxt").value.trim();
+    if (!txt) return;
+    var now = new Date();
+    var t = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,"0") + "-" + String(now.getDate()).padStart(2,"0") + " " + String(now.getHours()).padStart(2,"0") + ":" + String(now.getMinutes()).padStart(2,"0");
+    DATA[name].memo.unshift({ time: t, text: txt });
+    saveMemos();
+    render(name);
+  });
+  document.getElementById("ClearMemoBtn").addEventListener("click", function() {
+    if (confirm(name + " 메모를 모두 삭제할까요?")) { DATA[name].memo = []; saveMemos(); render(name); }
+  });
 
-  setTimeout(() => {
-    drawDaily(d.daily, d.monthGoal, d.monthDays, d.monthDay);
-    drawCat(d.catRatio);
-  }, 80);
+  var dc = Chart.getChart("DailyChart"), cc = Chart.getChart("CatChart");
+  if (dc) dc.destroy(); if (cc) cc.destroy();
+  setTimeout(function() { drawDaily(d.daily, d.monthGoal, d.monthDays); drawCat(d.catRatio); }, 80);
 }
 
-function drawDaily(data, goal, days, today) {
-  const ctx = document.getElementById('DailyChart');
+function drawDaily(data, goal, days) {
+  var ctx = document.getElementById("DailyChart");
   if (!ctx) return;
-  const goalLine = [];
-  for (let i = 0; i <= days; i++) goalLine.push(Math.round(goal / days * i));
+  var gl = Array.from({length: days+1}, function(_,i) { return Math.round(goal/days*i); });
   new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: Array.from({length: days+1}, (_,i) => i),
+    type: "line",
+    data: { labels: Array.from({length:days+1},function(_,i){return i;}),
       datasets: [
-        { label: '실제 누적', data: data, borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.1)', fill: true, tension: 0.3, pointRadius: 0 },
-        { label: '목표선', data: goalLine, borderColor: '#888780', borderDash: [4,4], fill: false, pointRadius: 0 }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: true, position: 'bottom', labels: { font: { size: 11 } } } },
+        { label:"실제 누적", data:data, borderColor:"#1D9E75", backgroundColor:"rgba(29,158,117,0.1)", fill:true, tension:0.3, pointRadius:0 },
+        { label:"목표선", data:gl, borderColor:"#888780", borderDash:[4,4], fill:false, pointRadius:0 }
+      ]},
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins: { legend: { display:true, position:"bottom", labels:{font:{size:11}} } },
       scales: {
-        y: { beginAtZero: true, ticks: { font: { size: 10 }, callback: v => (v/10000).toFixed(0) + '만' } },
-        x: { ticks: { font: { size: 10 }, callback: (v,i) => i % 5 === 0 ? i + '일' : '' } }
-      }
-    }
+        y: { beginAtZero:true, ticks:{font:{size:10}, callback:function(v){ return Math.round(v/10000)+"만"; }} },
+        x: { ticks:{font:{size:10}, callback:function(v,i){ return i%5===0 ? i+"일" : ""; }} }
+      }}
   });
 }
 
 function drawCat(ratio) {
-  const ctx = document.getElementById('CatChart');
+  var ctx = document.getElementById("CatChart");
   if (!ctx) return;
   new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['전문약','일반약','건기식','PB'],
-      datasets: [{ data: [ratio.pro, ratio.gen, ratio.hs, ratio.pb], backgroundColor: ['#378ADD','#EF9F27','#97C459','#7F77DD'], borderWidth: 0 }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: true, position: 'right', labels: { font: { size: 12 } } },
-        tooltip: { callbacks: { label: c => c.label + ': ' + c.parsed + '%' } }
-      },
-      cutout: '60%'
-    }
+    type: "doughnut",
+    data: { labels:["전문약","일반약","건기식","PB"],
+      datasets:[{ data:[ratio.pro,ratio.gen,ratio.hs,ratio.pb], backgroundColor:["#378ADD","#EF9F27","#97C459","#7F77DD"], borderWidth:0 }]},
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins: { legend:{display:true, position:"right", labels:{font:{size:12}}},
+        tooltip:{callbacks:{label:function(c){return c.label+": "+c.parsed+"%";}}} },
+      cutout:"60%"}
   });
 }
 
-const MEMO_KEY = 'oneclick-smalltalk-kim-memos';
-function loadMemosFromStorage() {
+var MEMO_KEY = "oneclick-kim-memos";
+function saveMemos() {
   try {
-    const saved = localStorage.getItem(MEMO_KEY);
-    if (!saved) return;
-    const memos = JSON.parse(saved);
-    Object.keys(memos).forEach(name => { if (DATA[name]) DATA[name].memo = memos[name]; });
+    var m = {};
+    NAMES.forEach(function(n) { if (DATA[n].memo && DATA[n].memo.length) m[n] = DATA[n].memo; });
+    localStorage.setItem(MEMO_KEY, JSON.stringify(m));
   } catch(e) {}
 }
-function saveMemosToStorage() {
-  try {
-    const memos = {};
-    Object.keys(DATA).forEach(name => { if (DATA[name].memo && DATA[name].memo.length > 0) memos[name] = DATA[name].memo; });
-    localStorage.setItem(MEMO_KEY, JSON.stringify(memos));
-  } catch(e) {}
-}
-function saveMemo(name) {
-  const txt = document.getElementById('Memo').value.trim();
-  if (!txt) return;
-  const now = new Date();
-  const t = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-  DATA[name].memo.unshift({ time: t, text: txt, ai: null });
-  saveMemosToStorage();
-  render(name);
-}
-function clearAllMemos(name) {
-  if (!confirm(name + '의 모든 메모를 삭제하시겠습니까?')) return;
-  DATA[name].memo = [];
-  saveMemosToStorage();
-  render(name);
-}
-loadMemosFromStorage();
+try {
+  var saved = localStorage.getItem(MEMO_KEY);
+  if (saved) {
+    var memos = JSON.parse(saved);
+    Object.keys(memos).forEach(function(n) { if (DATA[n]) DATA[n].memo = memos[n]; });
+  }
+} catch(e) {}
 
-document.getElementById('Result').innerHTML = '<div class="welcome card"><h3>🔍 거래처를 검색해주세요</h3><p>위 검색창을 클릭하면 담당 거래처 40곳이 표시됩니다.<br>글자 입력 시 자동완성으로 거래처를 찾을 수 있습니다.<br><br><span style="font-size:12px;color:#1D9E75;">✓ v2.0: 자동완성 검색 · 차트 · 카테고리 탭 · 메모 영구 저장</span></p></div>';
 </script>
-
 </body>
 </html>
