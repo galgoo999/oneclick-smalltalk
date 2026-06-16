@@ -512,6 +512,16 @@ function render(name){
     +(d.catRatio.pb>=15?"&#10003; PB 비중 우수. 신제품 PB 카테고리 확장 권장.":d.catRatio.pb>=5?"&#9711; PB 평균 수준. PB 품목 추가 도입으로 마진 개선 가능.":"&#9888; PB 비중 낮음. 마진 높은 PB 우선 영업 필요.")
     +'</div></div>';
 
+  html+='<div class="card"><div class="section" style="margin-top:0">&#128221; 거래처 메모</div>'
+    +'<textarea class="memo-input" id="MemoTxt" placeholder="거래처 문의, 미팅 내용을 기록하세요..."></textarea>'
+    +'<div><button class="memo-btn" id="SaveMemoBtn">&#128190; 저장</button><button class="memo-btn" id="ClearMemoBtn">&#128465; 전체삭제</button></div>';
+  if(!d.memo.length){
+    html+='<div style="margin-top:10px;padding:12px;text-align:center;color:#6B6963;font-size:13px;background:#F5F4EE;border-radius:8px;">저장된 메모가 없습니다.</div>';
+  } else {
+    d.memo.forEach(function(m){html+='<div class="memo-item"><div class="memo-time">'+m.time+'</div>'+m.text+'</div>';});
+  }
+  html+='</div>';
+
   html+='<div class="card"><div class="section" style="margin-top:0">&#127942; 매출 상위 품목</div>'
     +'<div class="tabs">'
     +'<button class="tab tab-pro active" id="tab-pro" data-tab="pro">전문약</button>'
@@ -535,16 +545,6 @@ function render(name){
       +'<a href="'+n.link+'" target="_blank" style="color:#3C3489;font-size:12px;font-weight:500;">기사 보기 &#8594;</a>'
       +' <span style="color:#999;font-size:11px;">'+n.source+'</span></div>';
   });
-  html+='</div>';
-
-  html+='<div class="card"><div class="section" style="margin-top:0">&#128221; 거래처 메모</div>'
-    +'<textarea class="memo-input" id="MemoTxt" placeholder="거래처 문의, 미팅 내용을 기록하세요..."></textarea>'
-    +'<div><button class="memo-btn" id="SaveMemoBtn">&#128190; 저장</button><button class="memo-btn" id="ClearMemoBtn">&#128465; 전체삭제</button></div>';
-  if(!d.memo.length){
-    html+='<div style="margin-top:10px;padding:12px;text-align:center;color:#6B6963;font-size:13px;background:#F5F4EE;border-radius:8px;">저장된 메모가 없습니다.</div>';
-  } else {
-    d.memo.forEach(function(m){html+='<div class="memo-item"><div class="memo-time">'+m.time+'</div>'+m.text+'</div>';});
-  }
   html+='</div>';
 
   document.getElementById("Result").innerHTML=html;
