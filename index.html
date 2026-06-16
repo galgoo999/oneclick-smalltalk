@@ -116,6 +116,10 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-seri
   <div id="Dropdown" class="dd"></div>
 </div>
 <div class="hint">&#128161; 검색창을 클릭하면 담당 거래처 40곳이 표시됩니다. 글자를 입력하면 자동완성됩니다.</div>
+<div id="RankingWrap" style="margin-bottom:12px;">
+  <button id="RankToggle" onclick="toggleRanking()" style="width:100%;padding:10px 16px;background:linear-gradient(135deg,#1D9E75,#0a3d2e);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:left;">&#127942; 이번 달 목표달성률 순위 보기 &#9660;</button>
+  <div id="RankingBody" style="display:none;margin-top:8px;"></div>
+</div>
 <div id="Result"><div class="welcome card"><h3>&#128269; 거래처를 검색해주세요</h3><p>위 검색창을 클릭하면 담당 거래처 40곳이 표시됩니다.<br>&#10003; v3: 반품률 실데이터 반영</p></div></div>
 </div>
 <script>
@@ -474,6 +478,74 @@ try{
   var saved=localStorage.getItem(MEMO_KEY);
   if(saved){var memos=JSON.parse(saved);Object.keys(memos).forEach(function(n){if(DATA[n])DATA[n].memo=memos[n];});}
 }catch(e){}
+
+function toggleRanking(){
+  var body=document.getElementById("RankingBody");
+  var btn=document.getElementById("RankToggle");
+  if(body.style.display==="none"){
+    body.style.display="block";
+    btn.innerHTML="&#127942; 이번 달 목표달성률 순위 닫기 &#9650;";
+    renderRanking();
+  } else {
+    body.style.display="none";
+    btn.innerHTML="&#127942; 이번 달 목표달성률 순위 보기 &#9660;";
+  }
+}
+
+function renderRanking(){
+  var monthDay=16, monthDays=30;
+  var pace=Math.round(monthDay/monthDays*100); // 현재 진척 기준 (53%)
+  var rows=NAMES.map(function(name){
+    var d=DATA[name];
+    var goal=d.monthGoal||0;
+    var sales=d.sales||0;
+    var pct=goal>0?Math.round(sales/goal*100):0;
+    return{name:name,region:d.region,pharmacist:d.pharmacist,grade:d.grade,sales:sales,goal:goal,pct:pct,trend:d.salesTrend};
+  }).sort(function(a,b){return b.pct-a.pct;});
+
+  var html='<div class="card" style="padding:0;overflow:hidden;">'
+    +'<div style="padding:12px 16px 8px;background:#f9f8f3;border-bottom:1px solid #E8E6DC;display:flex;justify-content:space-between;align-items:center;">'
+    +'<span style="font-weight:700;font-size:14px;">&#128200; 이번 달 목표달성률 순위</span>'
+    +'<span style="font-size:12px;color:#6B6963;">기준일 '+monthDay+'일 · 정상진행 '+pace+'%</span></div>'
+    +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">'
+    +'<thead><tr style="background:#f0efe8;text-align:left;">'
+    +'<th style="padding:8px 10px;white-space:nowrap;">순위</th>'
+    +'<th style="padding:8px 10px;">약국</th>'
+    +'<th style="padding:8px 10px;white-space:nowrap;">등급</th>'
+    +'<th style="padding:8px 10px;white-space:nowrap;text-align:right;">이번달 매출</th>'
+    +'<th style="padding:8px 10px;white-space:nowrap;text-align:right;">월목표</th>'
+    +'<th style="padding:8px 10px;white-space:nowrap;text-align:center;">달성률</th>'
+    +'<th style="padding:8px 10px;white-space:nowrap;text-align:center;">전월대비</th>'
+    +'</tr></thead><tbody>';
+
+  rows.forEach(function(r,i){
+    var isGood=r.pct>=pace, isBad=r.pct<Math.round(pace*0.6);
+    var bg=i%2===0?"#fff":"#fafaf5";
+    var pctColor=isGood?"#1D9E75":isBad?"#C0392B":"#E67E22";
+    var bar=Math.min(r.pct,100);
+    var tCls=r.trend.startsWith("+")?"color:#1D9E75":r.trend==="0%"?"color:#888":"color:#C0392B";
+    var gCls=r.grade==="A"?"background:#FFF3CD;color:#856404":r.grade==="B"?"background:#D1ECE1;color:#0C447C":"background:#F0EEE5;color:#6B6963";
+    html+='<tr style="background:'+bg+';cursor:pointer;" onclick="document.getElementById('Q').value=''+r.name+'';render(''+r.name+'');document.getElementById('RankingBody').style.display='none';document.getElementById('RankToggle').innerHTML='&#127942; 이번 달 목표달성률 순위 보기 &#9660;'">'
+      +'<td style="padding:8px 10px;font-weight:700;color:'+pctColor+';">'+(i+1)+'</td>'
+      +'<td style="padding:8px 10px;font-weight:600;">'+r.name+'<br><span style="font-size:11px;color:#888;font-weight:400;">'+r.region+' · '+r.pharmacist+'</span></td>'
+      +'<td style="padding:8px 10px;text-align:center;"><span style="'+gCls+';padding:2px 6px;border-radius:4px;font-size:12px;font-weight:700;">'+r.grade+'</span></td>'
+      +'<td style="padding:8px 10px;text-align:right;">'+fmt(r.sales)+'</td>'
+      +'<td style="padding:8px 10px;text-align:right;color:#888;">'+fmt(r.goal)+'</td>'
+      +'<td style="padding:8px 10px;text-align:center;">'
+      +'<div style="display:flex;align-items:center;gap:6px;justify-content:center;">'
+      +'<div style="width:60px;height:6px;background:#eee;border-radius:3px;overflow:hidden;">'
+      +'<div style="width:'+bar+'%;height:100%;background:'+pctColor+';border-radius:3px;"></div></div>'
+      +'<span style="font-weight:700;color:'+pctColor+';min-width:36px;">'+r.pct+'%</span></div></td>'
+      +'<td style="padding:8px 10px;text-align:center;font-weight:600;'+tCls+';">'+r.trend+'</td>'
+      +'</tr>';
+  });
+
+  html+='</tbody></table></div>'
+    +'<div style="padding:8px 16px;font-size:11px;color:#888;background:#f9f8f3;border-top:1px solid #E8E6DC;">&#9679; 초록: 목표 진행 양호('+pace+'% 이상) &#9679; 주황: 주의 &#9679; 빨강: 목표 미달 위험 · 약국명 클릭 시 상세 보기</div></div>';
+
+  document.getElementById("RankingBody").innerHTML=html;
+}
+
 </script>
 </body>
 </html>
