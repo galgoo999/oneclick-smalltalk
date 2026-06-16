@@ -400,6 +400,24 @@ function render(name){
     +'<div class="kv'+(pct>=80?" g":pct<40?" r":"")+'"><div class="kvl">달성률</div><div class="kva">'+pct+'%</div></div>'
     +'</div></div>';
 
+  // 잔고이력 카드
+  (function(){
+    var bh=BAL_HIST[name]||[0,0,0,0];
+    var labels=["전전월 15일","전전월 30일","전월 15일","전월 30일"];
+    var balHtml='<div class="card" style="padding:12px 16px;margin-bottom:14px;">'
+      +'<div class="section" style="margin-top:0;margin-bottom:8px;">&#128197; 잔고 이력</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">';
+    labels.forEach(function(lbl,i){
+      var val=bh[i]||0;
+      balHtml+='<div style="background:#F5F4EE;border-radius:8px;padding:10px 12px;">'
+        +'<div style="font-size:11px;color:#6B6963;margin-bottom:4px;">'+lbl+'</div>'
+        +'<div style="font-size:15px;font-weight:600;">'+fmt(val)+'</div>'
+        +'</div>';
+    });
+    balHtml+='</div></div>';
+    html+=balHtml;
+  })();
+
   html+='<div class="card"><div class="section" style="margin-top:0">&#127919; 월 거래 금액 목표 진행률</div>'
     +'<div class="goal-box"><div class="goal-row">'
     +'<div><span class="goal-pct">'+pct+'%</span> <span style="font-size:13px;color:#6B6963;">달성 ('+d.monthDay+'일/'+d.monthDays+'일)</span></div>'
