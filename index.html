@@ -322,10 +322,13 @@ var curName=null, curTab="pro";
 
 function fmt(n){
   if(!n||n===0)return "없음";
-  if(n>=100000000)return (n/100000000).toFixed(1)+"억";
-  if(n>=10000000)return (n/10000000).toFixed(1)+"천만원";
-  if(n>=10000)return Math.round(n/10000)+"만원";
-  return n.toLocaleString()+"원";
+  if(n>=100000000){
+    var uk=Math.floor(n/100000000);
+    var bm=Math.round((n%100000000)/1000000);
+    return bm>0?uk+"억 "+bm+"백만원":uk+"억원";
+  }
+  if(n>=1000000)return Math.round(n/1000000)+"백만원";
+  return Math.round(n/10000)+"만원";
 }
 
 function showDD(items,title){
