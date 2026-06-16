@@ -116,13 +116,6 @@ body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-seri
   <div id="Dropdown" class="dd"></div>
 </div>
 <div class="hint">&#128161; 검색창을 클릭하면 담당 거래처 40곳이 표시됩니다. 글자를 입력하면 자동완성됩니다.</div>
-<div id="RankingWrap" style="margin-bottom:12px;">
-  <button id="RankToggle" onclick="toggleRanking()" style="width:100%;padding:10px 16px;background:linear-gradient(135deg,#1D9E75,#0a3d2e);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:left;">&#127942; 이번 달 목표달성률 순위 보기 &#9660;</button>
-  <div id="RankingBody" style="display:none;margin-top:8px;"></div>
-
-  <button id="DebtToggle" onclick="toggleDebt()" style="width:100%;padding:10px 16px;background:linear-gradient(135deg,#8B1A1A,#C0392B);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:left;margin-top:6px;">&#9888; 미수금 · 회전일 알림 보기 &#9660;</button>
-  <div id="DebtBody" style="display:none;margin-top:8px;"></div>
-</div>
 <div id="Result"><div class="welcome card"><h3>&#128269; 거래처를 검색해주세요</h3><p>위 검색창을 클릭하면 담당 거래처 40곳이 표시됩니다.<br>&#10003; v3: 반품률 실데이터 반영</p></div></div>
 </div>
 <script>
@@ -347,7 +340,7 @@ function render(name){
     +'<div class="metrics">'
     +'<div class="metric"><div class="metric-label">이번달 매출</div><div class="metric-value">'+fmt(d.sales)+'</div><div class="metric-trend '+(tUp?"up":d.salesTrend==="0%"?"neutral":"down")+'">'+d.salesTrend+'</div></div>'
     +'<div class="metric"><div class="metric-label">반품률</div><div class="metric-value">'+d.returnRate+'%</div><div class="metric-trend '+(d.returnRate<5?"up":d.returnRate<15?"neutral":"down")+'">'+(d.returnRate<5?"양호":d.returnRate<15?"보통":"주의")+'</div></div>'
-    +'<div class="metric"><div class="metric-label">미수금</div><div class="metric-value">'+fmt(d.debt)+'</div><div class="metric-trend '+(d.debt<5000000?"up":d.debt<20000000?"neutral":"down")+'">'+(d.debt<5000000?"양호":d.debt<20000000?"관리":"주의")+'</div></div>'
+    +'<div class="metric"><div class="metric-label">현잔고</div><div class="metric-value">'+fmt(d.debt)+'</div><div class="metric-trend '+(d.debt<5000000?"up":d.debt<20000000?"neutral":"down")+'">'+(d.debt<5000000?"양호":d.debt<20000000?"관리":"주의")+'</div></div>'
     +'</div>'
     +'<div class="kv4">'
     +'<div class="kv"><div class="kvl">5월 매출</div><div class="kva">'+fmt(d.maySales)+'</div></div>'
@@ -482,144 +475,11 @@ try{
   if(saved){var memos=JSON.parse(saved);Object.keys(memos).forEach(function(n){if(DATA[n])DATA[n].memo=memos[n];});}
 }catch(e){}
 
-function toggleRanking(){
-  var body=document.getElementById("RankingBody");
-  var btn=document.getElementById("RankToggle");
-  if(body.style.display==="none"){
-    body.style.display="block";
-    btn.innerHTML="&#127942; 이번 달 목표달성률 순위 닫기 &#9650;";
-    renderRanking();
-  } else {
-    body.style.display="none";
-    btn.innerHTML="&#127942; 이번 달 목표달성률 순위 보기 &#9660;";
-  }
+function saveBalInput(el){
+  el.value=el.value.replace(/[^0-9]/g,'').replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  var raw=parseInt(el.value.replace(/,/g,'')||'0');
+  if(el.dataset.skey) localStorage.setItem(el.dataset.skey, raw);
 }
-
-function selectRankPharm(name){
-  document.getElementById("Q").value=name;
-  render(name);
-  document.getElementById("RankingBody").style.display="none";
-  document.getElementById("RankToggle").innerHTML="&#127942; 이번 달 목표달성률 순위 보기 &#9660;";
-}
-
-function renderRanking(){
-  var monthDay=16, monthDays=30;
-  var pace=Math.round(monthDay/monthDays*100);
-  var rows=NAMES.map(function(name){
-    var d=DATA[name];
-    var goal=d.monthGoal||0;
-    var sales=d.sales||0;
-    var pct=goal>0?Math.round(sales/goal*100):0;
-    return{name:name,region:d.region,pharmacist:d.pharmacist,grade:d.grade,sales:sales,goal:goal,pct:pct,trend:d.salesTrend};
-  }).sort(function(a,b){return b.pct-a.pct;});
-
-  var out='<div class="card" style="padding:0;overflow:hidden;">'
-    +'<div style="padding:12px 16px 8px;background:#f9f8f3;border-bottom:1px solid #E8E6DC;display:flex;justify-content:space-between;align-items:center;">'
-    +'<span style="font-weight:700;font-size:14px;">&#128200; 이번 달 목표달성률 순위</span>'
-    +'<span style="font-size:12px;color:#6B6963;">기준일 '+monthDay+'일 · 정상진행 '+pace+'%</span></div>'
-    +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">'
-    +'<thead><tr style="background:#f0efe8;">'
-    +'<th style="padding:8px 10px;">순위</th>'
-    +'<th style="padding:8px 10px;text-align:left;">약국</th>'
-    +'<th style="padding:8px 10px;">등급</th>'
-    +'<th style="padding:8px 10px;text-align:right;">이번달 매출</th>'
-    +'<th style="padding:8px 10px;text-align:right;">월목표</th>'
-    +'<th style="padding:8px 10px;text-align:center;">달성률</th>'
-    +'<th style="padding:8px 10px;text-align:center;">전월대비</th>'
-    +'</tr></thead><tbody>';
-
-  rows.forEach(function(r,i){
-    var isGood=r.pct>=pace, isBad=r.pct<Math.round(pace*0.6);
-    var bg=i%2===0?"#fff":"#fafaf5";
-    var pc=isGood?"#1D9E75":isBad?"#C0392B":"#E67E22";
-    var bar=Math.min(r.pct,100);
-    var tCls=r.trend.startsWith("+")?"color:#1D9E75":r.trend==="0%"?"color:#888":"color:#C0392B";
-    var gBg=r.grade==="A"?"#FFF3CD":r.grade==="B"?"#D1ECE1":"#F0EEE5";
-    var gFg=r.grade==="A"?"#856404":r.grade==="B"?"#0C447C":"#6B6963";
-    var idx=NAMES.indexOf(r.name);
-    out+='<tr style="background:'+bg+';cursor:pointer;" onclick="selectRankPharm(NAMES['+idx+'])">'
-      +'<td style="padding:8px 10px;text-align:center;font-weight:700;color:'+pc+';">'+(i+1)+'</td>'
-      +'<td style="padding:8px 10px;font-weight:600;">'+r.name+'<br><span style="font-size:11px;color:#888;font-weight:400;">'+r.region+' · '+r.pharmacist+'</span></td>'
-      +'<td style="padding:8px 10px;text-align:center;"><span style="background:'+gBg+';color:'+gFg+';padding:2px 6px;border-radius:4px;font-size:12px;font-weight:700;">'+r.grade+'</span></td>'
-      +'<td style="padding:8px 10px;text-align:right;">'+fmt(r.sales)+'</td>'
-      +'<td style="padding:8px 10px;text-align:right;color:#888;">'+fmt(r.goal)+'</td>'
-      +'<td style="padding:8px 10px;text-align:center;">'
-        +'<div style="display:flex;align-items:center;gap:6px;justify-content:center;">'
-        +'<div style="width:60px;height:6px;background:#eee;border-radius:3px;overflow:hidden;">'
-        +'<div style="width:'+bar+'%;height:100%;background:'+pc+';border-radius:3px;"></div></div>'
-        +'<span style="font-weight:700;color:'+pc+';min-width:36px;">'+r.pct+'%</span></div></td>'
-      +'<td style="padding:8px 10px;text-align:center;font-weight:600;'+tCls+';">'+r.trend+'</td>'
-      +'</tr>';
-  });
-
-  out+='</tbody></table></div>'
-    +'<div style="padding:8px 16px;font-size:11px;color:#888;background:#f9f8f3;border-top:1px solid #E8E6DC;">&#9679; 초록: 양호('+pace+'% 이상) &#9679; 주황: 주의 &#9679; 빨강: 미달 위험 · 약국 클릭 시 상세 이동</div></div>';
-
-  document.getElementById("RankingBody").innerHTML=out;
-}
-
-
-function toggleDebt(){
-  var body=document.getElementById("DebtBody");
-  var btn=document.getElementById("DebtToggle");
-  if(body.style.display==="none"){
-    body.style.display="block";
-    btn.innerHTML="&#9888; 미수금 · 회전일 알림 닫기 &#9650;";
-    renderDebt();
-  } else {
-    body.style.display="none";
-    btn.innerHTML="&#9888; 미수금 · 회전일 알림 보기 &#9660;";
-  }
-}
-
-function renderDebt(){
-  var rows=NAMES.map(function(name){
-    var d=DATA[name];
-    var debt=d.debt||0;
-    var goal=d.monthGoal||1;
-    var daily=goal/30;
-    var turnover=daily>0?Math.round(debt/daily):0;
-    return{name:name,region:d.region,pharmacist:d.pharmacist,grade:d.grade,debt:debt,turnover:turnover,sales:d.sales,goal:goal};
-  }).filter(function(r){return r.debt>0;}).sort(function(a,b){return b.turnover-a.turnover;});
-
-  var out='<div class="card" style="padding:0;overflow:hidden;">'
-    +'<div style="padding:12px 16px 8px;background:#fff5f5;border-bottom:1px solid #fcc;display:flex;justify-content:space-between;align-items:center;">'
-    +'<span style="font-weight:700;font-size:14px;">&#9888; 미수금 · 회전일 현황</span>'
-    +'<span style="font-size:12px;color:#888;">60일↑ 위험 · 45~60일 주의</span></div>'
-    +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">'
-    +'<thead><tr style="background:#fff0f0;text-align:center;">'
-    +'<th style="padding:8px 10px;text-align:left;">약국</th>'
-    +'<th style="padding:8px 10px;">등급</th>'
-    +'<th style="padding:8px 10px;text-align:right;">미수금</th>'
-    +'<th style="padding:8px 10px;text-align:right;">월목표</th>'
-    +'<th style="padding:8px 10px;">회전일</th>'
-    +'<th style="padding:8px 10px;">위험도</th>'
-    +'</tr></thead><tbody>';
-
-  rows.forEach(function(r,i){
-    var bg=i%2===0?"#fff":"#fffafa";
-    var danger=r.turnover>=60, warn=r.turnover>=45&&r.turnover<60;
-    var tc=danger?"#C0392B":warn?"#E67E22":"#1D9E75";
-    var badge=danger?'<span style="background:#C0392B;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">위험</span>'
-             :warn?'<span style="background:#E67E22;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">주의</span>'
-             :'<span style="background:#1D9E75;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">양호</span>';
-    var idx=NAMES.indexOf(r.name);
-    out+='<tr style="background:'+bg+';cursor:pointer;" onclick="selectRankPharm(NAMES['+idx+'])">'
-      +'<td style="padding:8px 10px;font-weight:600;">'+r.name+'<br><span style="font-size:11px;color:#888;font-weight:400;">'+r.region+' · '+r.pharmacist+'</span></td>'
-      +'<td style="padding:8px 10px;text-align:center;"><span style="font-size:12px;font-weight:700;color:#6B6963;">'+r.grade+'</span></td>'
-      +'<td style="padding:8px 10px;text-align:right;font-weight:600;color:'+tc+';">'+fmt(r.debt)+'</td>'
-      +'<td style="padding:8px 10px;text-align:right;color:#888;">'+fmt(r.goal)+'</td>'
-      +'<td style="padding:8px 10px;text-align:center;font-weight:700;font-size:15px;color:'+tc+';">'+r.turnover+'일</td>'
-      +'<td style="padding:8px 10px;text-align:center;">'+badge+'</td>'
-      +'</tr>';
-  });
-
-  out+='</tbody></table></div>'
-    +'<div style="padding:8px 16px;font-size:11px;color:#888;background:#fff5f5;border-top:1px solid #fcc;">회전일 = 미수금 ÷ (월목표÷30) · 약국 클릭 시 상세 이동</div></div>';
-
-  document.getElementById("DebtBody").innerHTML=out;
-}
-
 </script>
 </body>
 </html>
