@@ -324,11 +324,10 @@ function fmt(n){
   if(!n||n===0)return "없음";
   if(n>=100000000){
     var uk=Math.floor(n/100000000);
-    var bm=Math.round((n%100000000)/1000000);
-    return bm>0?uk+"억 "+bm+"백만원":uk+"억원";
+    var man=Math.round((n%100000000)/10000);
+    return man>0?uk+"억 "+man.toLocaleString()+"만원":uk+"억원";
   }
-  if(n>=1000000)return Math.round(n/1000000)+"백만원";
-  return Math.round(n/10000)+"만원";
+  return Math.round(n/10000).toLocaleString()+"만원";
 }
 
 function showDD(items,title){
