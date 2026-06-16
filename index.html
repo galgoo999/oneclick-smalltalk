@@ -435,11 +435,13 @@ function render(name){
     +'<div class="metric"><div class="metric-label">이번달 반품금액</div><div class="metric-value">'+d.returnRate.toLocaleString()+'원</div><div class="metric-trend '+(d.returnRate===0?"up":d.returnRate<500000?"neutral":"down")+'">'+(d.returnRate===0?"없음":d.returnRate<500000?"소액":"주의")+'</div></div>'
     +'<div class="metric"><div class="metric-label">현잔고</div><div class="metric-value">'+fmt(d.debt)+'</div><div class="metric-trend '+(d.debt<5000000?"up":d.debt<20000000?"neutral":"down")+'">'+(d.debt<5000000?"양호":d.debt<20000000?"관리":"주의")+'</div></div>'
     +'</div>'
-    +'<div class="kv4">'
-    +'<div class="kv"><div class="kvl">5월 매출</div><div class="kva">'+fmt(d.maySales)+'</div></div>'
-    +'<div class="kv"><div class="kvl">4월 매출</div><div class="kva">'+fmt(d.aprSales)+'</div></div>'
+    +'<div class="kv4" style="grid-template-columns:repeat(3,1fr);">'
     +'<div class="kv"><div class="kvl">월 목표</div><div class="kva">'+fmt(d.monthGoal)+'</div></div>'
+    +'<div class="kv"><div class="kvl">이번달 매출</div><div class="kva">'+fmt(d.sales)+'</div></div>'
     +'<div class="kv'+(pct>=80?" g":pct<40?" r":"")+'"><div class="kvl">달성률</div><div class="kva">'+pct+'%</div></div>'
+    +'<div class="kv"><div class="kvl">4월 매출</div><div class="kva">'+fmt(d.aprSales)+'</div></div>'
+    +'<div class="kv"><div class="kvl">5월 매출</div><div class="kva">'+fmt(d.maySales)+'</div></div>'
+    +'<div class="kv"><div class="kvl">이번달 반품금액</div><div class="kva">'+d.returnRate.toLocaleString()+'원</div></div>'
     +'</div></div>';
 
   // 잔고이력 카드
