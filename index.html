@@ -492,9 +492,16 @@ function toggleRanking(){
   }
 }
 
+function selectRankPharm(name){
+  document.getElementById("Q").value=name;
+  render(name);
+  document.getElementById("RankingBody").style.display="none";
+  document.getElementById("RankToggle").innerHTML="&#127942; 이번 달 목표달성률 순위 보기 &#9660;";
+}
+
 function renderRanking(){
   var monthDay=16, monthDays=30;
-  var pace=Math.round(monthDay/monthDays*100); // 현재 진척 기준 (53%)
+  var pace=Math.round(monthDay/monthDays*100);
   var rows=NAMES.map(function(name){
     var d=DATA[name];
     var goal=d.monthGoal||0;
@@ -503,47 +510,49 @@ function renderRanking(){
     return{name:name,region:d.region,pharmacist:d.pharmacist,grade:d.grade,sales:sales,goal:goal,pct:pct,trend:d.salesTrend};
   }).sort(function(a,b){return b.pct-a.pct;});
 
-  var html='<div class="card" style="padding:0;overflow:hidden;">'
+  var out='<div class="card" style="padding:0;overflow:hidden;">'
     +'<div style="padding:12px 16px 8px;background:#f9f8f3;border-bottom:1px solid #E8E6DC;display:flex;justify-content:space-between;align-items:center;">'
     +'<span style="font-weight:700;font-size:14px;">&#128200; 이번 달 목표달성률 순위</span>'
     +'<span style="font-size:12px;color:#6B6963;">기준일 '+monthDay+'일 · 정상진행 '+pace+'%</span></div>'
     +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">'
-    +'<thead><tr style="background:#f0efe8;text-align:left;">'
-    +'<th style="padding:8px 10px;white-space:nowrap;">순위</th>'
-    +'<th style="padding:8px 10px;">약국</th>'
-    +'<th style="padding:8px 10px;white-space:nowrap;">등급</th>'
-    +'<th style="padding:8px 10px;white-space:nowrap;text-align:right;">이번달 매출</th>'
-    +'<th style="padding:8px 10px;white-space:nowrap;text-align:right;">월목표</th>'
-    +'<th style="padding:8px 10px;white-space:nowrap;text-align:center;">달성률</th>'
-    +'<th style="padding:8px 10px;white-space:nowrap;text-align:center;">전월대비</th>'
+    +'<thead><tr style="background:#f0efe8;">'
+    +'<th style="padding:8px 10px;">순위</th>'
+    +'<th style="padding:8px 10px;text-align:left;">약국</th>'
+    +'<th style="padding:8px 10px;">등급</th>'
+    +'<th style="padding:8px 10px;text-align:right;">이번달 매출</th>'
+    +'<th style="padding:8px 10px;text-align:right;">월목표</th>'
+    +'<th style="padding:8px 10px;text-align:center;">달성률</th>'
+    +'<th style="padding:8px 10px;text-align:center;">전월대비</th>'
     +'</tr></thead><tbody>';
 
   rows.forEach(function(r,i){
     var isGood=r.pct>=pace, isBad=r.pct<Math.round(pace*0.6);
     var bg=i%2===0?"#fff":"#fafaf5";
-    var pctColor=isGood?"#1D9E75":isBad?"#C0392B":"#E67E22";
+    var pc=isGood?"#1D9E75":isBad?"#C0392B":"#E67E22";
     var bar=Math.min(r.pct,100);
     var tCls=r.trend.startsWith("+")?"color:#1D9E75":r.trend==="0%"?"color:#888":"color:#C0392B";
-    var gCls=r.grade==="A"?"background:#FFF3CD;color:#856404":r.grade==="B"?"background:#D1ECE1;color:#0C447C":"background:#F0EEE5;color:#6B6963";
-    html+='<tr style="background:'+bg+';cursor:pointer;" onclick="document.getElementById('Q').value=''+r.name+'';render(''+r.name+'');document.getElementById('RankingBody').style.display='none';document.getElementById('RankToggle').innerHTML='&#127942; 이번 달 목표달성률 순위 보기 &#9660;'">'
-      +'<td style="padding:8px 10px;font-weight:700;color:'+pctColor+';">'+(i+1)+'</td>'
+    var gBg=r.grade==="A"?"#FFF3CD":r.grade==="B"?"#D1ECE1":"#F0EEE5";
+    var gFg=r.grade==="A"?"#856404":r.grade==="B"?"#0C447C":"#6B6963";
+    var idx=NAMES.indexOf(r.name);
+    out+='<tr style="background:'+bg+';cursor:pointer;" onclick="selectRankPharm(NAMES['+idx+'])">'
+      +'<td style="padding:8px 10px;text-align:center;font-weight:700;color:'+pc+';">'+(i+1)+'</td>'
       +'<td style="padding:8px 10px;font-weight:600;">'+r.name+'<br><span style="font-size:11px;color:#888;font-weight:400;">'+r.region+' · '+r.pharmacist+'</span></td>'
-      +'<td style="padding:8px 10px;text-align:center;"><span style="'+gCls+';padding:2px 6px;border-radius:4px;font-size:12px;font-weight:700;">'+r.grade+'</span></td>'
+      +'<td style="padding:8px 10px;text-align:center;"><span style="background:'+gBg+';color:'+gFg+';padding:2px 6px;border-radius:4px;font-size:12px;font-weight:700;">'+r.grade+'</span></td>'
       +'<td style="padding:8px 10px;text-align:right;">'+fmt(r.sales)+'</td>'
       +'<td style="padding:8px 10px;text-align:right;color:#888;">'+fmt(r.goal)+'</td>'
       +'<td style="padding:8px 10px;text-align:center;">'
-      +'<div style="display:flex;align-items:center;gap:6px;justify-content:center;">'
-      +'<div style="width:60px;height:6px;background:#eee;border-radius:3px;overflow:hidden;">'
-      +'<div style="width:'+bar+'%;height:100%;background:'+pctColor+';border-radius:3px;"></div></div>'
-      +'<span style="font-weight:700;color:'+pctColor+';min-width:36px;">'+r.pct+'%</span></div></td>'
+        +'<div style="display:flex;align-items:center;gap:6px;justify-content:center;">'
+        +'<div style="width:60px;height:6px;background:#eee;border-radius:3px;overflow:hidden;">'
+        +'<div style="width:'+bar+'%;height:100%;background:'+pc+';border-radius:3px;"></div></div>'
+        +'<span style="font-weight:700;color:'+pc+';min-width:36px;">'+r.pct+'%</span></div></td>'
       +'<td style="padding:8px 10px;text-align:center;font-weight:600;'+tCls+';">'+r.trend+'</td>'
       +'</tr>';
   });
 
-  html+='</tbody></table></div>'
-    +'<div style="padding:8px 16px;font-size:11px;color:#888;background:#f9f8f3;border-top:1px solid #E8E6DC;">&#9679; 초록: 목표 진행 양호('+pace+'% 이상) &#9679; 주황: 주의 &#9679; 빨강: 목표 미달 위험 · 약국명 클릭 시 상세 보기</div></div>';
+  out+='</tbody></table></div>'
+    +'<div style="padding:8px 16px;font-size:11px;color:#888;background:#f9f8f3;border-top:1px solid #E8E6DC;">&#9679; 초록: 양호('+pace+'% 이상) &#9679; 주황: 주의 &#9679; 빨강: 미달 위험 · 약국 클릭 시 상세 이동</div></div>';
 
-  document.getElementById("RankingBody").innerHTML=html;
+  document.getElementById("RankingBody").innerHTML=out;
 }
 
 </script>
