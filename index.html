@@ -439,6 +439,9 @@ function render(name){
     +'<div class="kv"><div class="kvl">월 목표</div><div class="kva">'+fmt(d.monthGoal)+'</div></div>'
     +'<div class="kv"><div class="kvl">이번달 매출</div><div class="kva">'+fmt(d.sales)+'</div></div>'
     +'<div class="kv'+(pct>=80?" g":pct<40?" r":"")+'"><div class="kvl">달성률</div><div class="kva">'+pct+'%</div></div>'
+    +'<div class="kv"><div class="kvl">전전월 매출</div><div class="kva">'+fmt(d.aprSales)+'</div></div>'
+    +'<div class="kv"><div class="kvl">전월 매출</div><div class="kva">'+fmt(d.maySales)+'</div></div>'
+    +'<div class="kv"><div class="kvl">이번달 반품금액</div><div class="kva">'+d.returnRate.toLocaleString()+'원</div></div>'
     +'</div></div>';
 
   // 잔고이력 카드
@@ -455,7 +458,13 @@ function render(name){
         +'<div style="font-size:15px;font-weight:600;">'+fmt(val)+'</div>'
         +'</div>';
     });
-    balHtml+='</div></div>';
+    balHtml+='</div>';
+    var debtColor=d.debt<5000000?'#1D9E75':d.debt<20000000?'#C8973E':'#C0392B';
+    balHtml+='<div style="margin-top:8px;background:#F5F4EE;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">'
+      +'<div style="font-size:12px;color:#6B6963;">현잔고</div>'
+      +'<div style="font-size:16px;font-weight:700;color:'+debtColor+';">'+fmt(d.debt)+'</div>'
+      +'</div>';
+    balHtml+='</div>';
     html+=balHtml;
   })();
 
